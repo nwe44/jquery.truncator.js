@@ -18,7 +18,7 @@
 
       var actual_max_length = opts.max_length - opts.more.length - 3;  // 3 for " ()"
       var truncated_node = recursivelyTruncate(this, actual_max_length);
-      var full_node = $(this).hide();
+      var full_node = $(this).css('overflow', 'hidden').hide();
 
       truncated_node.insertAfter(full_node);
       
@@ -26,7 +26,13 @@
       findNodeForLess(full_node).append(' (<a href="#show less content">'+opts.less+'</a>)');
       
       truncated_node.find('a:last').click(function() {
-        truncated_node.hide(); full_node.show(); return false;
+      	var truncated_node_height = truncated_node.css('height');
+      	truncated_node.hide();
+      	full_node.show(0,function(){
+	      	var full_node_height = full_node.css('height');
+	      	full_node.css('height', truncated_node_height ).animate({"height": full_node_height },"fast");
+      	}); 
+      	return false;
       });
       full_node.find('a:last').click(function() {
         truncated_node.show(); full_node.hide(); return false;
